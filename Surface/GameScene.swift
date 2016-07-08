@@ -18,6 +18,8 @@ class GameScene: SKScene {
     var restart: MSButtonNode!
     let fixedDelta: CFTimeInterval = 1.0/60.0
     var scoreLabel: SKLabelNode!
+    var up: SKSpriteNode!
+    var down: SKSpriteNode!
     
     /* Creature Array */
     var gridArray = [[Square]]()
@@ -27,7 +29,7 @@ class GameScene: SKScene {
     
     let side = 25
     
-    var gridx = 600
+    var gridx = 1000
     
     var randmove = 0
     
@@ -47,6 +49,10 @@ class GameScene: SKScene {
     
     var state:GameState = .Playing
     
+    var scoreCount = 0
+    
+    var highScore: Int = 0
+    
     var score: Int = 0 {
         didSet {
             scoreLabel.text = String(score)
@@ -64,6 +70,11 @@ class GameScene: SKScene {
         restart = self.childNodeWithName("restart") as! MSButtonNode
         
         scoreLabel = childNodeWithName("scoreLabel") as! SKLabelNode
+        up = childNodeWithName("up") as! SKSpriteNode
+        down = childNodeWithName("down") as! SKSpriteNode
+
+        up.runAction(SKAction.fadeOutWithDuration(3.0))
+        down.runAction(SKAction.fadeOutWithDuration(3.0))
 
         
         randmove = Int(arc4random_uniform(7))
@@ -74,6 +85,8 @@ class GameScene: SKScene {
         
         restart.selectedHandler = {
             
+            let tempHighScore = self.highScore
+            
             /* Grab reference to our SpriteKit view */
             let skView = self.view as SKView!
             
@@ -83,8 +96,11 @@ class GameScene: SKScene {
             /* Ensure correct aspect mode */
             scene.scaleMode = .AspectFill
             
+            scene.highScore = tempHighScore
+            
             /* Restart game scene */
             skView.presentScene(scene)
+            
             
             /* Hide restart button */
             
@@ -144,10 +160,10 @@ class GameScene: SKScene {
                 gridx -= Int(moveSpeed)
                 moveGrid()
                 scrollWorld()
-                if goingUp && self.circle.position.y < 320{
+                if goingUp && self.circle.position.y < 295{
                     self.circle.position.y += 4
                 }
-                else if goingDown && self.circle.position.y > 0{
+                else if goingDown && self.circle.position.y > 25{
                     self.circle.position.y -= 4
                 }
             }
@@ -156,10 +172,12 @@ class GameScene: SKScene {
                 gridAdd(1)
                 gridx += Int(moveSpeed)
                 score += 1
-                if score % scoreLevel == 0 && score != 0 && moveSpeed < 9{
+                scoreCount += 1
+                if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 10{
                     moveSpeed += 1
                     scrollSpeed += 10
-                    scoreLevel += 35
+                    scoreLevel += 30
+                    scoreCount = 0
                 }
             }
             
@@ -289,6 +307,11 @@ class GameScene: SKScene {
     
     func gameOver(){
         shouldmove = false
+        if score > highScore{
+            highScore = score
+        }
+        scoreLabel.fontSize = 40
+        scoreLabel.text = "Score: " + String(score) + " High: " + String(highScore)
         restart.state = .MSButtonNodeStateActive
         state = .GameOver
     }
