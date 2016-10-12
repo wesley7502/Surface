@@ -9,7 +9,7 @@
 import SpriteKit
 
 enum GameState {
-    case Playing, GameOver
+    case playing, gameOver
 }
 
 class GameScene: SKScene {
@@ -18,8 +18,6 @@ class GameScene: SKScene {
     var restart: MSButtonNode!
     let fixedDelta: CFTimeInterval = 1.0/60.0
     var scoreLabel: SKLabelNode!
-    var up: SKSpriteNode!
-    var down: SKSpriteNode!
     
     /* Creature Array */
     var gridArray = [[Square]]()
@@ -29,7 +27,7 @@ class GameScene: SKScene {
     
     let side = 25
     
-    var gridx = 1000
+    var gridy = -300
     
     var randmove = 0
     
@@ -45,9 +43,9 @@ class GameScene: SKScene {
     
     var goingDown = false
     
-    var scoreLevel = 35
+    var scoreLevel = 25
     
-    var state:GameState = .Playing
+    var state:GameState = .playing
     
     var scoreCount = 0
     
@@ -60,22 +58,17 @@ class GameScene: SKScene {
     }
 
     
-    override func didMoveToView(view: SKView) {
+    override func didMove(to view: SKView) {
         
-        circle = childNodeWithName("circle") as! SKSpriteNode
+        circle = childNode(withName: "circle") as! SKSpriteNode
         
         /* UI game objects */
         
-        scrollLayer = self.childNodeWithName("scrollLayer")
-        restart = self.childNodeWithName("restart") as! MSButtonNode
+        scrollLayer = self.childNode(withName: "scrollLayer")
+        restart = self.childNode(withName: "restart") as! MSButtonNode
         
-        scoreLabel = childNodeWithName("scoreLabel") as! SKLabelNode
-        up = childNodeWithName("up") as! SKSpriteNode
-        down = childNodeWithName("down") as! SKSpriteNode
-
-        up.runAction(SKAction.fadeOutWithDuration(3.0))
-        down.runAction(SKAction.fadeOutWithDuration(3.0))
-
+        scoreLabel = childNode(withName: "scoreLabel") as! SKLabelNode
+       
         
         randmove = Int(arc4random_uniform(7))
         
@@ -94,35 +87,35 @@ class GameScene: SKScene {
             let scene = GameScene(fileNamed:"GameScene") as GameScene!
             
             /* Ensure correct aspect mode */
-            scene.scaleMode = .AspectFill
+            scene?.scaleMode = .aspectFill
             
-            scene.highScore = tempHighScore
+            scene?.highScore = tempHighScore
             
             /* Restart game scene */
-            skView.presentScene(scene)
+            skView?.presentScene(scene)
             
             
             /* Hide restart button */
             
         }
-        restart.state = .MSButtonNodeStateHidden
+        restart.state = .msButtonNodeStateHidden
         
       
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        /* Called when a touch begins */
-        if state == .Playing{
+        if state == .playing{
         for touch in touches {
-            let location  = touch.locationInNode(self)
-            if location.x <= 284{
-                if self.circle.position.y < 320{
+            let location  = touch.location(in: self)
+            if location.x <= 160{
+                if self.circle.position.x < 320{
                     goingUp = true
                     goingDown = false
                 }
             }
             else{
-                if self.circle.position.y > 0{
+                if self.circle.position.x > 0{
                     goingDown = true
                     goingUp = false
                 }
@@ -132,17 +125,17 @@ class GameScene: SKScene {
     }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if state == .Playing{
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if state == .playing{
             for touch in touches {
-                let location  = touch.locationInNode(self)
-                if location.x <= 284{
-                    if self.circle.position.y < 320{
+                let location  = touch.location(in: self)
+                if location.x <= 160{
+                    if self.circle.position.x < 320{
                         goingUp = false
                     }
                 }
                 else{
-                    if self.circle.position.y > 0{
+                    if self.circle.position.x > 0{
                         goingDown = false
                     }
                 }
@@ -151,39 +144,39 @@ class GameScene: SKScene {
         }
     }
    
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         /* Called before each frame is rendered */
-        if state == .GameOver{
+        if state == .gameOver{
         }
         else{
             if shouldmove{
-                gridx -= Int(moveSpeed)
+                gridy += Int(moveSpeed)
                 moveGrid()
-                scrollWorld()
-                if goingUp && self.circle.position.y < 295{
-                    self.circle.position.y += 4
+                if goingUp && self.circle.position.x > 25{
+                    self.circle.position.x -= 4
                 }
-                else if goingDown && self.circle.position.y > 25{
-                    self.circle.position.y -= 4
+                else if goingDown && self.circle.position.x < 295{
+                    self.circle.position.x += 4
                 }
             }
-            if gridArray[0][0].position.x < -25{
-                gridArray.removeAtIndex(0)
+            if gridArray[0][0].position.y > 600{
+                gridArray.remove(at: 0)
                 gridAdd(1)
-                gridx += Int(moveSpeed)
+                gridy -= Int(moveSpeed)
                 score += 1
                 scoreCount += 1
-                if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 10{
+                if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 11{
                     moveSpeed += 1
-                    scrollSpeed += 10
-                    scoreLevel += 30
+                    scrollSpeed += 15
+                    scoreLevel += 25
                     scoreCount = 0
                 }
             }
+            scrollWorld()
             
             let currentpos = self.circle.position
         
-            for scanx in 0..<5{
+            for scanx in 0..<7{
                 for scany in 0..<13 {
                     let scanpos = gridArray[scanx][scany].position
                     let calculateddistance = sqrt(pow(Double(scanpos.x - currentpos.x),2.0) + pow(Double(scanpos.y - currentpos.y),2.0))
@@ -196,25 +189,24 @@ class GameScene: SKScene {
         }
     }
     
-    func gridAdd(total: Int) {
+    func gridAdd(_ total: Int) {
         
         /* Loop through columns */
         for _ in 0..<total {
             
-            /* Initialize empty column */
+            /* Initialize empty row */
             gridArray.append([])
             
             /* Loop through rows */
-            for gridY in 0 ..< 14 {
+            for gridX in 0 ..< 14 {
                 
-                let xpos = gridArray.count - 1
+                let ypos = gridArray.count - 1
                 
-                if(gridY < randmove || gridY > randmove+5){
-                
-                    addCreatureAtGrid(x:xpos, y:gridY, shown: true)
+                if(gridX < randmove || gridX > randmove+5){
+                    addCreatureAtGrid(x:gridX, y:ypos, shown: true)
                 }
                 else{
-                    addCreatureAtGrid(x:xpos, y:gridY, shown: false)
+                    addCreatureAtGrid(x:gridX, y:ypos, shown: false)
                 }
             }
             shiftRandMove()
@@ -224,10 +216,11 @@ class GameScene: SKScene {
     func moveGrid(){
         for gridX in 0..<gridArray.count {
             for gridY in 0..<gridArray[gridX].count {
-                 gridArray[gridX][gridY].position.x -= moveSpeed
+                 gridArray[gridX][gridY].position.y += moveSpeed
             }
             
         }
+        print(gridy)
         
     }
     
@@ -249,7 +242,7 @@ class GameScene: SKScene {
         while randmove < 0 || randmove > 7
     }
     
-    func addCreatureAtGrid(x x: Int, y: Int, shown: Bool) {
+    func addCreatureAtGrid(x: Int, y: Int, shown: Bool) {
         /* Add a new creature at grid position*/
         
         /* New creature object */
@@ -266,10 +259,11 @@ class GameScene: SKScene {
         
         if shifter{
         /* Calculate position on screen */
-             gridPosition = CGPoint(x: x * side + gridx, y: y * side)
+             gridPosition = CGPoint(x: x * side, y: gridy -  y * side)      //the intialization
         }
         else{
-             gridPosition = CGPoint(x: Int(gridArray[gridArray.count-2][1].position.x) + 25, y: y * side)
+             gridPosition = CGPoint(x: x * side, y: Int(gridArray[gridArray.count-2][0].position.y) - 25)   //adding on to grid
+             print(gridPosition)
         }
 
             
@@ -279,29 +273,32 @@ class GameScene: SKScene {
         addChild(square)
         
         /* Add creature to grid array */
-        gridArray[x].append(square)
+        gridArray[gridArray.count - 1].append(square)
     }
     
     func scrollWorld() {
+        
+        
         /* Scroll World */
-        scrollLayer.position.x -= scrollSpeed * CGFloat(fixedDelta)
+        scrollLayer.position.y += scrollSpeed * CGFloat(fixedDelta)
         
         /* Loop through scroll layer nodes */
         for ground in scrollLayer.children as! [SKSpriteNode] {
             
             /* Get ground node position, convert node position to scene space */
-            let groundPosition = scrollLayer.convertPoint(ground.position, toNode: self)
+            let groundPosition = scrollLayer.convert(ground.position, to: self)
             
             /* Check if ground sprite has left the scene */
-            if groundPosition.x <= -ground.size.width / 2 {
+            if groundPosition.y >= ground.size.height / 2 + ground.size.height{
                 
                 /* Reposition ground sprite to the second starting position */
-                let newPosition = CGPointMake( (self.size.width / 2) + ground.size.width, groundPosition.y)
+                let newPosition = CGPoint( x: groundPosition.x, y: -(self.size.height / 2) + 5)
                 
                 /* Convert new node position back to scroll layer space */
-                ground.position = self.convertPoint(newPosition, toNode: scrollLayer)
+                ground.position = self.convert(newPosition, to: scrollLayer)
             }
         }
+
 
     }
     
@@ -312,8 +309,8 @@ class GameScene: SKScene {
         }
         scoreLabel.fontSize = 40
         scoreLabel.text = "Score: " + String(score) + " High: " + String(highScore)
-        restart.state = .MSButtonNodeStateActive
-        state = .GameOver
+        restart.state = .msButtonNodeStateActive
+        state = .gameOver
     }
 
     

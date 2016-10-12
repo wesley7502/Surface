@@ -8,14 +8,14 @@ class Square: SKSpriteNode {
     var exists: Bool = false {
         didSet {
             /* Visibility */
-            hidden = !exists
+            isHidden = !exists
         }
     }
     
     init() {
         /* Initialize with 'bubble' asset */
-        let texture = SKTexture(imageNamed: "Square")
-        super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 25, height: 25))
+        let texture = SKTexture(imageNamed: "RedSquare")
+        super.init(texture: texture, color: UIColor.clear, size: CGSize(width: 25, height: 25))
         
         /* Set Z-Position, ensure it's on top of grid */
         zPosition = 1
