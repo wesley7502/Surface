@@ -14,6 +14,7 @@ enum GameState {
 
 class GameScene: SKScene {
     var circle: SKSpriteNode!
+    var scoreBackground: SKSpriteNode!
     var scrollLayer: SKNode!
     var restart: MSButtonNode!
     let fixedDelta: CFTimeInterval = 1.0/60.0
@@ -27,7 +28,7 @@ class GameScene: SKScene {
     
     let side = 25
     
-    var gridy = -300
+    var gridy = 800
     
     var randmove = 0
     
@@ -39,11 +40,9 @@ class GameScene: SKScene {
     
     var moveSpeed: CGFloat = 3
     
-    var goingUp = false
+    var movingTouch = false
     
-    var goingDown = false
-    
-    var scoreLevel = 25
+    var scoreLevel = 3
     
     var state:GameState = .playing
     
@@ -61,6 +60,8 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         circle = childNode(withName: "circle") as! SKSpriteNode
+        scoreBackground = childNode(withName: "scoreBackground") as! SKSpriteNode
+        scoreBackground.isHidden = true
         
         /* UI game objects */
         
@@ -108,37 +109,35 @@ class GameScene: SKScene {
         if state == .playing{
         for touch in touches {
             let location  = touch.location(in: self)
-            if location.x <= 160{
-                if self.circle.position.x < 320{
-                    goingUp = true
-                    goingDown = false
-                }
-            }
-            else{
-                if self.circle.position.x > 0{
-                    goingDown = true
-                    goingUp = false
-                }
-            }
+            movingTouch = true
+            //let diffx: CGFloat = location.x - self.circle.position.x
+            //let diffy: CGFloat = 0.0
+            //let goTime = diffx/600
+            //let move = SKAction.moveBy(x: diffx, y: diffy, duration: TimeInterval(goTime))
+            //self.circle.run(move)
+            self.circle.position.x = location.x
             
         }
     }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        /* Called when a touch begins */
+        if state == .playing{
+            for touch in touches {
+                let location = touch.location(in: self)
+                circle.position.x = location.x
+                
+            }
+        
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if state == .playing{
             for touch in touches {
                 let location  = touch.location(in: self)
-                if location.x <= 160{
-                    if self.circle.position.x < 320{
-                        goingUp = false
-                    }
-                }
-                else{
-                    if self.circle.position.x > 0{
-                        goingDown = false
-                    }
-                }
+                movingTouch =  false
                 
             }
         }
@@ -149,26 +148,21 @@ class GameScene: SKScene {
         if state == .gameOver{
         }
         else{
+            print(moveSpeed)
             if shouldmove{
                 gridy += Int(moveSpeed)
                 moveGrid()
-                if goingUp && self.circle.position.x > 25{
-                    self.circle.position.x -= 4
-                }
-                else if goingDown && self.circle.position.x < 295{
-                    self.circle.position.x += 4
-                }
             }
-            if gridArray[0][0].position.y > 600{
+            if gridArray[0][0].position.y < -25{
                 gridArray.remove(at: 0)
                 gridAdd(1)
-                gridy -= Int(moveSpeed)
+                gridy += Int(moveSpeed)
                 score += 1
                 scoreCount += 1
                 if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 11{
-                    moveSpeed += 1
-                    scrollSpeed += 15
-                    scoreLevel += 25
+                    moveSpeed += 0.2
+                    scrollSpeed += 3
+                    scoreLevel += 3
                     scoreCount = 0
                 }
             }
@@ -216,11 +210,11 @@ class GameScene: SKScene {
     func moveGrid(){
         for gridX in 0..<gridArray.count {
             for gridY in 0..<gridArray[gridX].count {
-                 gridArray[gridX][gridY].position.y += moveSpeed
+                 gridArray[gridX][gridY].position.y -= moveSpeed
             }
             
         }
-        print(gridy)
+        //print(gridy)
         
     }
     
@@ -259,11 +253,11 @@ class GameScene: SKScene {
         
         if shifter{
         /* Calculate position on screen */
-             gridPosition = CGPoint(x: x * side, y: gridy -  y * side)      //the intialization
+             gridPosition = CGPoint(x: (Double)(x * side) + 12.5, y: Double(gridy +  y * side))      //the intialization
         }
         else{
-             gridPosition = CGPoint(x: x * side, y: Int(gridArray[gridArray.count-2][0].position.y) - 25)   //adding on to grid
-             print(gridPosition)
+             gridPosition = CGPoint(x: (Double)(x * side) + 12.5, y: Double(gridArray[gridArray.count-2][0].position.y) + 25)   //adding on to grid
+             //print(gridPosition)
         }
 
             
@@ -277,10 +271,8 @@ class GameScene: SKScene {
     }
     
     func scrollWorld() {
-        
-        
         /* Scroll World */
-        scrollLayer.position.y += scrollSpeed * CGFloat(fixedDelta)
+        scrollLayer.position.y -= scrollSpeed * CGFloat(fixedDelta)
         
         /* Loop through scroll layer nodes */
         for ground in scrollLayer.children as! [SKSpriteNode] {
@@ -289,26 +281,27 @@ class GameScene: SKScene {
             let groundPosition = scrollLayer.convert(ground.position, to: self)
             
             /* Check if ground sprite has left the scene */
-            if groundPosition.y >= ground.size.height / 2 + ground.size.height{
+            if groundPosition.y <= -ground.size.height / 2 + 5 {
                 
                 /* Reposition ground sprite to the second starting position */
-                let newPosition = CGPoint( x: groundPosition.x, y: -(self.size.height / 2) + 5)
+                let newPosition = CGPoint(x: groundPosition.x, y: (self.size.height / 2) + ground.size.height)
                 
                 /* Convert new node position back to scroll layer space */
                 ground.position = self.convert(newPosition, to: scrollLayer)
             }
         }
-
-
+        
     }
+
     
     func gameOver(){
         shouldmove = false
-        if score > highScore{
-            highScore = score
+        if UserState.sharedInstance.highScore < score{
+            UserState.sharedInstance.highScore = score
         }
-        scoreLabel.fontSize = 40
-        scoreLabel.text = "Score: " + String(score) + " High: " + String(highScore)
+        scoreLabel.fontSize = 25
+        scoreLabel.text = "Score: " + String(score) + " High: " + String(UserState.sharedInstance.highScore)
+        scoreBackground.isHidden = false
         restart.state = .msButtonNodeStateActive
         state = .gameOver
     }
