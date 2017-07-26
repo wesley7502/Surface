@@ -7,9 +7,10 @@
 //
 
 import SpriteKit
+import AVFoundation
 
 enum GameState {
-    case playing, gameOver
+    case playing, gameOver, title
 }
 
 class GameScene: SKScene {
@@ -19,6 +20,7 @@ class GameScene: SKScene {
     var restart: MSButtonNode!
     let fixedDelta: CFTimeInterval = 1.0/60.0
     var scoreLabel: SKLabelNode!
+    var gameOverLabel: SKLabelNode!
     
     /* Creature Array */
     var gridArray = [[Square]]()
@@ -28,7 +30,7 @@ class GameScene: SKScene {
     
     let side = 25
     
-    var gridy = 800
+    var gridy = 600
     
     var randmove = 0
     
@@ -38,7 +40,7 @@ class GameScene: SKScene {
     
     var scrollSpeed: CGFloat = 80
     
-    var moveSpeed: CGFloat = 3
+    var moveSpeed: CGFloat = 5
     
     var movingTouch = false
     
@@ -50,6 +52,8 @@ class GameScene: SKScene {
     
     var highScore: Int = 0
     
+    var backgroundMusic: AVAudioPlayer!
+    
     var score: Int = 0 {
         didSet {
             scoreLabel.text = String(score)
@@ -59,6 +63,11 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
+        self.view?.showsFPS = false
+        self.view?.showsNodeCount = false
+        self.view?.showsDrawCount = false
+        self.view?.showsFields = false
+        
         circle = childNode(withName: "circle") as! SKSpriteNode
         scoreBackground = childNode(withName: "scoreBackground") as! SKSpriteNode
         scoreBackground.isHidden = true
@@ -67,12 +76,14 @@ class GameScene: SKScene {
         
         scrollLayer = self.childNode(withName: "scrollLayer")
         restart = self.childNode(withName: "restart") as! MSButtonNode
-        
         scoreLabel = childNode(withName: "scoreLabel") as! SKLabelNode
-       
+        gameOverLabel = childNode(withName: "gameOverLabel") as! SKLabelNode
+        gameOverLabel.isHidden = true
+        
         
         randmove = Int(arc4random_uniform(7))
         
+        gridAddBegin()
         gridAdd(25)
         
         shifter = false
@@ -101,6 +112,18 @@ class GameScene: SKScene {
         }
         restart.state = .msButtonNodeStateHidden
         
+        let path = Bundle.main.path(forResource: "Berlin Impulse.mp3", ofType:nil)!   //background music
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            let sound = try AVAudioPlayer(contentsOf: url)
+            backgroundMusic = sound
+            sound.numberOfLoops = -1
+            sound.play()
+        } catch {
+            // couldn't load file :(
+        }
+
       
     }
     
@@ -145,10 +168,9 @@ class GameScene: SKScene {
    
     override func update(_ currentTime: TimeInterval) {
         /* Called before each frame is rendered */
-        if state == .gameOver{
+        if state == .gameOver || state == .title{
         }
         else{
-            print(moveSpeed)
             if shouldmove{
                 gridy += Int(moveSpeed)
                 moveGrid()
@@ -159,25 +181,54 @@ class GameScene: SKScene {
                 gridy += Int(moveSpeed)
                 score += 1
                 scoreCount += 1
-                if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 11{
+                if scoreCount % scoreLevel == 0 && score != 0 && moveSpeed < 14{
                     moveSpeed += 0.2
                     scrollSpeed += 3
-                    scoreLevel += 3
+                    scoreLevel += 2
                     scoreCount = 0
+                }
+                if score % 100 == 0 && score != 0 {
+                    let woosh = SKAction.playSoundFileNamed("woosh.wav", waitForCompletion: false)
+                    self.run(woosh)
                 }
             }
             scrollWorld()
             
             let currentpos = self.circle.position
         
-            for scanx in 0..<7{
+            for scanx in 0..<10{    //Colision indicator
                 for scany in 0..<13 {
                     let scanpos = gridArray[scanx][scany].position
                     let calculateddistance = sqrt(pow(Double(scanpos.x - currentpos.x),2.0) + pow(Double(scanpos.y - currentpos.y),2.0))
-                    if calculateddistance < 37.5 && gridArray[scanx][scany].exists{
+                    if calculateddistance < 32.5 && gridArray[scanx][scany].exists{
                         gameOver()
                     }
                 
+                }
+            }
+        }
+    }
+    
+    func gridAddBegin(){
+        var leftCounter = 0
+        var rightCounter = 13
+        for row in  0 ..< 14{
+            gridArray.append([])
+            for gridX in 0..<14{
+                let ypos = gridArray.count - 1
+                if(gridX <= leftCounter || gridX  >= rightCounter){
+                    addCreatureAtGrid(x:gridX, y:ypos, shown: true)
+                }
+                else{
+                    addCreatureAtGrid(x:gridX, y:ypos, shown: false)
+                }
+            }
+            if row % 2 == 0{
+                if leftCounter < randmove {
+                    leftCounter += 1
+                }
+                if rightCounter > randmove+6{
+                    rightCounter -= 1
                 }
             }
         }
@@ -214,8 +265,7 @@ class GameScene: SKScene {
             }
             
         }
-        //print(gridy)
-        
+       
     }
     
     func shiftRandMove(){
@@ -257,7 +307,6 @@ class GameScene: SKScene {
         }
         else{
              gridPosition = CGPoint(x: (Double)(x * side) + 12.5, y: Double(gridArray[gridArray.count-2][0].position.y) + 25)   //adding on to grid
-             //print(gridPosition)
         }
 
             
@@ -295,6 +344,20 @@ class GameScene: SKScene {
 
     
     func gameOver(){
+        let explode = SKAction(named: "Explode")!
+        let remove = SKAction.removeFromParent()
+        let sequence = SKAction.sequence([explode,remove])
+        self.circle.run(sequence)
+        
+        if backgroundMusic != nil {
+            backgroundMusic.stop()
+            backgroundMusic = nil
+        }
+        
+        let explodeA = SKAction.playSoundFileNamed("explode.wav", waitForCompletion: false)
+        self.run(explodeA)
+        
+        
         shouldmove = false
         if UserState.sharedInstance.highScore < score{
             UserState.sharedInstance.highScore = score
@@ -302,6 +365,7 @@ class GameScene: SKScene {
         scoreLabel.fontSize = 25
         scoreLabel.text = "Score: " + String(score) + " High: " + String(UserState.sharedInstance.highScore)
         scoreBackground.isHidden = false
+        gameOverLabel.isHidden = false
         restart.state = .msButtonNodeStateActive
         state = .gameOver
     }

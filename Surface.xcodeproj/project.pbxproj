@@ -31,9 +31,15 @@
 		5502D95C1D2D6AB700D41C93 /* SKTEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5502D9511D2D6AB700D41C93 /* SKTEffects.swift */; };
 		5502D95D1D2D6AB700D41C93 /* SKTTimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5502D9521D2D6AB700D41C93 /* SKTTimingFunctions.swift */; };
 		5502D95E1D2D6AB700D41C93 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5502D9531D2D6AB700D41C93 /* Vector3.swift */; };
+		552D99851F27FF2500931506 /* woosh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 552D99841F27FF2500931506 /* woosh.wav */; };
+		552D99871F28389B00931506 /* explode.wav in Resources */ = {isa = PBXBuildFile; fileRef = 552D99861F28389B00931506 /* explode.wav */; };
 		5564391C1E868BE200527C2E /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5564391B1E868BE200527C2E /* UserState.swift */; };
-		55B5327B1D2ED0D700E6270A /* MainScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 55B5327A1D2ED0D700E6270A /* MainScene.sks */; };
-		55B5327D1D2ED21300E6270A /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B5327C1D2ED21300E6270A /* MainScene.swift */; };
+		55AE4F7C1EF26C6000D0077F /* TitleScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 55AE4F7B1EF26C6000D0077F /* TitleScene.sks */; };
+		55AE4F7E1EF26CA200D0077F /* TitleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AE4F7D1EF26CA200D0077F /* TitleScene.swift */; };
+		55AE4F801EF291D600D0077F /* Berlin Impulse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 55AE4F7F1EF291D600D0077F /* Berlin Impulse.mp3 */; };
+		55AE4F821EF29A7B00D0077F /* Sweltering Spheres.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 55AE4F811EF29A7B00D0077F /* Sweltering Spheres.mp3 */; };
+		55CCAF531EE7817300969E87 /* AnimationActions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 55CCAF521EE7817300969E87 /* AnimationActions.sks */; };
+		55CCAF551EE781B400969E87 /* MyActions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 55CCAF541EE781B400969E87 /* MyActions.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,9 +90,15 @@
 		5502D9511D2D6AB700D41C93 /* SKTEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTEffects.swift; sourceTree = "<group>"; };
 		5502D9521D2D6AB700D41C93 /* SKTTimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTTimingFunctions.swift; sourceTree = "<group>"; };
 		5502D9531D2D6AB700D41C93 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
+		552D99841F27FF2500931506 /* woosh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = woosh.wav; sourceTree = "<group>"; };
+		552D99861F28389B00931506 /* explode.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explode.wav; sourceTree = "<group>"; };
 		5564391B1E868BE200527C2E /* UserState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
-		55B5327A1D2ED0D700E6270A /* MainScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MainScene.sks; path = ../MainScene.sks; sourceTree = "<group>"; };
-		55B5327C1D2ED21300E6270A /* MainScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainScene.swift; sourceTree = "<group>"; };
+		55AE4F7B1EF26C6000D0077F /* TitleScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TitleScene.sks; sourceTree = "<group>"; };
+		55AE4F7D1EF26CA200D0077F /* TitleScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleScene.swift; sourceTree = "<group>"; };
+		55AE4F7F1EF291D600D0077F /* Berlin Impulse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Berlin Impulse.mp3"; sourceTree = "<group>"; };
+		55AE4F811EF29A7B00D0077F /* Sweltering Spheres.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Sweltering Spheres.mp3"; sourceTree = "<group>"; };
+		55CCAF521EE7817300969E87 /* AnimationActions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = AnimationActions.sks; sourceTree = "<group>"; };
+		55CCAF541EE781B400969E87 /* MyActions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MyActions.sks; path = ../MyActions.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,14 +152,20 @@
 				5502D9431D2D6A4C00D41C93 /* Utils */,
 				5502D9011D2C6F7F00D41C93 /* AppDelegate.swift */,
 				5564391B1E868BE200527C2E /* UserState.swift */,
+				55CCAF541EE781B400969E87 /* MyActions.sks */,
 				5502D9031D2C6F7F00D41C93 /* GameScene.sks */,
 				5502D9051D2C6F7F00D41C93 /* GameScene.swift */,
-				55B5327A1D2ED0D700E6270A /* MainScene.sks */,
-				55B5327C1D2ED21300E6270A /* MainScene.swift */,
+				55AE4F7B1EF26C6000D0077F /* TitleScene.sks */,
+				55AE4F7F1EF291D600D0077F /* Berlin Impulse.mp3 */,
+				552D99841F27FF2500931506 /* woosh.wav */,
+				55AE4F811EF29A7B00D0077F /* Sweltering Spheres.mp3 */,
+				55AE4F7D1EF26CA200D0077F /* TitleScene.swift */,
+				552D99861F28389B00931506 /* explode.wav */,
 				5502D9411D2D658500D41C93 /* Square.swift */,
 				5502D9071D2C6F7F00D41C93 /* GameViewController.swift */,
 				5502D9091D2C6F7F00D41C93 /* Main.storyboard */,
 				5502D90C1D2C6F7F00D41C93 /* Assets.xcassets */,
+				55CCAF521EE7817300969E87 /* AnimationActions.sks */,
 				5502D90E1D2C6F7F00D41C93 /* LaunchScreen.storyboard */,
 				5502D9111D2C6F7F00D41C93 /* Info.plist */,
 			);
@@ -309,9 +327,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55AE4F821EF29A7B00D0077F /* Sweltering Spheres.mp3 in Resources */,
+				552D99851F27FF2500931506 /* woosh.wav in Resources */,
+				55CCAF531EE7817300969E87 /* AnimationActions.sks in Resources */,
 				5502D9041D2C6F7F00D41C93 /* GameScene.sks in Resources */,
+				552D99871F28389B00931506 /* explode.wav in Resources */,
+				55CCAF551EE781B400969E87 /* MyActions.sks in Resources */,
+				55AE4F801EF291D600D0077F /* Berlin Impulse.mp3 in Resources */,
 				5502D9101D2C6F7F00D41C93 /* LaunchScreen.storyboard in Resources */,
-				55B5327B1D2ED0D700E6270A /* MainScene.sks in Resources */,
+				55AE4F7C1EF26C6000D0077F /* TitleScene.sks in Resources */,
 				5502D90D1D2C6F7F00D41C93 /* Assets.xcassets in Resources */,
 				5502D90B1D2C6F7F00D41C93 /* Main.storyboard in Resources */,
 			);
@@ -355,9 +379,9 @@
 				5502D9471D2D6A7B00D41C93 /* MSReferenceNode.swift in Sources */,
 				5502D95B1D2D6AB700D41C93 /* SKTAudio.swift in Sources */,
 				5502D95C1D2D6AB700D41C93 /* SKTEffects.swift in Sources */,
-				55B5327D1D2ED21300E6270A /* MainScene.swift in Sources */,
 				5502D95E1D2D6AB700D41C93 /* Vector3.swift in Sources */,
 				5502D93E1D2C7A2800D41C93 /* MSButtonNode.swift in Sources */,
+				55AE4F7E1EF26CA200D0077F /* TitleScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,7 +475,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -493,7 +517,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -507,6 +531,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = GRG4T5L45N;
 				INFOPLIST_FILE = Surface/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.flagicepic.Surface;
@@ -520,6 +545,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = GRG4T5L45N;
 				INFOPLIST_FILE = Surface/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.flagicepic.Surface;
